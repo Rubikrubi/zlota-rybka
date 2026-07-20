@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 520" width="760" height="520">
+  <defs>
+    <radialGradient id="body" cx="0.32" cy="0.28" r="0.9">
+      <stop offset="0%" stop-color="#FFF9D6"/>
+      <stop offset="28%" stop-color="#FFDC5C"/>
+      <stop offset="62%" stop-color="#FBA80D"/>
+      <stop offset="100%" stop-color="#D66502"/>
+    </radialGradient>
+    <linearGradient id="fin" x1="0" y1="0" x2="0.9" y2="1">
+      <stop offset="0%" stop-color="#FFDD86"/>
+      <stop offset="50%" stop-color="#FBA71D"/>
+      <stop offset="100%" stop-color="#E06A08"/>
+    </linearGradient>
+    <linearGradient id="tail" x1="0" y1="0.1" x2="1" y2="0.9">
+      <stop offset="0%" stop-color="#FFD066"/>
+      <stop offset="45%" stop-color="#FA9A14"/>
+      <stop offset="100%" stop-color="#DC6003"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0.1" y1="0" x2="0.6" y2="1">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Soft drop shadow so the fish reads against any background. -->
+    <filter id="glow" x="-25%" y="-25%" width="150%" height="150%">
+      <feDropShadow dx="0" dy="10" stdDeviation="13" flood-color="#00252F" flood-opacity="0.45"/>
+    </filter>
+
+    <!-- Body silhouette, reused for the fill and for clipping the scales. -->
+    <path id="bodyPath"
+          d="M112,258 C112,178 186,116 284,116 C360,116 426,158 462,210
+             C480,236 488,249 488,258 C488,267 480,280 462,306
+             C426,358 360,400 284,400 C186,400 112,338 112,258 Z"/>
+    <clipPath id="bodyClip"><use href="#bodyPath"/></clipPath>
+
+    <!-- Fin-ray texture: thin darker lines that make the fins read as fins. -->
+    <g id="tailRays" fill="none" stroke="#C25C05" stroke-width="4" opacity="0.45">
+      <path d="M498,244 C560,214 620,168 672,138"/>
+      <path d="M506,252 C566,230 630,196 686,170"/>
+      <path d="M498,272 C560,302 620,348 672,378"/>
+      <path d="M506,264 C566,286 630,320 686,346"/>
+    </g>
+  </defs>
+
+  <g filter="url(#glow)" stroke="#A34A05" stroke-width="9" stroke-linejoin="round" stroke-linecap="round">
+
+    <!-- Veiltail: two full lobes, drawn behind the body -->
+    <path fill="url(#tail)"
+          d="M478,242 C528,206 590,148 646,116 C694,88 722,122 704,178
+             C686,232 614,258 548,262 C614,268 686,292 704,346
+             C722,402 694,436 646,408 C590,376 528,318 478,282 Z"/>
+    <use href="#tailRays" stroke-linecap="round"/>
+
+    <!-- Dorsal fin -->
+    <path fill="url(#fin)"
+          d="M226,142 C252,58 330,22 402,38 C434,45 440,74 414,94
+             C386,116 372,138 364,160 Z"/>
+    <g fill="none" stroke="#C25C05" stroke-width="4" opacity="0.45">
+      <path d="M262,110 C300,74 348,56 392,54"/>
+      <path d="M296,86 C330,62 366,48 398,44"/>
+    </g>
+
+    <!-- Anal fin (bottom rear) -->
+    <path fill="url(#fin)"
+          d="M330,392 C348,430 388,452 408,438 C424,426 412,396 386,380 Z"/>
+
+    <!-- Body -->
+    <use href="#bodyPath" fill="url(#body)"/>
+
+    <!-- Scales + gloss, clipped to the body -->
+    <g clip-path="url(#bodyClip)" stroke="none">
+      <g fill="none" stroke="#E07C06" stroke-width="4" opacity="0.38">
+        <path d="M292,140 C324,186 324,330 292,376"/>
+        <path d="M344,150 C376,194 376,322 344,366"/>
+        <path d="M396,170 C426,210 426,306 396,346"/>
+        <path d="M444,198 C468,232 468,284 444,318"/>
+      </g>
+      <path fill="url(#shine)" d="M152,236 C166,166 224,124 296,124 C250,150 200,196 176,262 Z"/>
+    </g>
+
+    <!-- Gill cover -->
+    <path fill="none" stroke="#D4700A" stroke-width="7" opacity="0.7"
+          d="M228,158 C200,204 200,314 228,360"/>
+
+    <!-- Pectoral fin, in front of the body -->
+    <path fill="url(#fin)" opacity="0.97"
+          d="M246,306 C228,328 222,356 236,368 C250,380 270,364 279,343
+             C286,327 287,312 283,305 Z"/>
+
+    <!-- Eye -->
+    <circle cx="196" cy="222" r="40" fill="#FFFFFF"/>
+    <circle cx="188" cy="228" r="23" fill="#2B1400" stroke="none"/>
+    <circle cx="179" cy="217" r="10" fill="#FFFFFF" stroke="none"/>
+    <circle cx="198" cy="239" r="5" fill="#FFFFFF" opacity="0.85" stroke="none"/>
+
+    <!-- Smiling mouth -->
+    <path fill="none" stroke="#A34A05" stroke-width="8" d="M124,286 C138,302 160,304 172,294"/>
+
+    <!-- Rising bubbles -->
+    <g fill="#BFF3FF" fill-opacity="0.5" stroke="#8FE4FA" stroke-width="5">
+      <circle cx="86" cy="168" r="19"/>
+      <circle cx="48" cy="112" r="12"/>
+      <circle cx="82" cy="66" r="8"/>
+    </g>
+  </g>
+</svg>
