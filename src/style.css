@@ -23,6 +23,36 @@ html, body {
 
 #game canvas { display: block; }
 
+/* Przelacznik pelnego ekranu. Element DOM, a nie obiekt Phasera, zeby byl
+   dostepny na kazdym ekranie gry bez powielania go w kazdej scenie.
+   Rog prawy dolny: tam zaden ekran nie rysuje wlasnych przyciskow. */
+#fullscreen {
+  position: fixed;
+  right: calc(env(safe-area-inset-right) + 12px);
+  bottom: calc(env(safe-area-inset-bottom) + 12px);
+  z-index: 5;
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  line-height: 1;
+  color: #eafcff;
+  background: rgba(6, 45, 62, 0.72);
+  border: 2px solid rgba(56, 232, 255, 0.75);
+  border-radius: 12px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#fullscreen:hover { background: rgba(10, 70, 95, 0.9); }
+#fullscreen:active { transform: scale(0.94); }
+
+/* Ukryty tam, gdzie przegladarka nie potrafi w pelny ekran (iPhone/Safari) —
+   klasa nadawana z main.ts po sprawdzeniu wsparcia. */
+#fullscreen.unsupported { display: none; }
+
 /* Prosba o obrocenie telefonu — gra jest zaprojektowana poziomo.
    Pokazywana tylko na urzadzeniach dotykowych trzymanych pionowo. */
 #rotate {

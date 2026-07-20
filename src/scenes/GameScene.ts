@@ -21,6 +21,15 @@ const EDGE = 16; // breathing room between the board and the screen edge
 const SIDE_GUTTER = 300; // width reserved for a HUD column in the side layout
 const TOP_BAND = 190; // height reserved for the HUD band in the stacked layout
 
+/** Dane przekazywane do sceny. Pola poza `levelId` sa wypelniane tylko przy
+ *  wznawianiu partii po przebudowie sceny — normalny start poziomu ich nie ma. */
+export interface GameSceneData {
+  levelId: number;
+  score?: number;
+  movesLeft?: number;
+  grid?: (Pick<Cell, "type" | "special" | "magicTarget"> | null)[][] | null;
+}
+
 const DEPTH_HIGHLIGHT = 1;
 const DEPTH_GEM = 2;
 const DEPTH_POPUP = 30;
@@ -46,14 +55,35 @@ export class GameScene extends Phaser.Scene {
   /** Render state, indexed by board position and owned solely by this scene. */
   private sprites: (Phaser.GameObjects.Image | null)[][] = [];
 
+  private restoreGrid: GameSceneData["grid"] = null;
+  private restoreScore?: number;
+  private restoreMoves?: number;
+
   constructor() {
     super("Game");
   }
 
-  init(data: { levelId: number }) {
+  /** Stan wystarczajacy do wznowienia partii po przebudowaniu sceny (zmiana
+   *  rozmiaru plotna, np. wejscie w pelny ekran). Bez tego gracz tracilby
+   *  poziom przy kazdym przelaczeniu. */
+  snapshot(): GameSceneData {
+    return {
+      levelId: this.level.id,
+      score: this.score,
+      movesLeft: this.movesLeft,
+      grid: this.board.grid.map((row) =>
+        row.map((cell) => (cell ? { type: cell.type, special: cell.special, magicTarget: cell.magicTarget } : null))
+      ),
+    };
+  }
+
+  init(data: GameSceneData) {
     this.level = getLevel(data.levelId ?? 1);
-    this.score = 0;
-    this.movesLeft = this.level.moves;
+    this.restoreGrid = data.grid ?? null;
+    this.restoreScore = data.score;
+    this.restoreMoves = data.movesLeft;
+    this.score = this.restoreScore ?? 0;
+    this.movesLeft = this.restoreMoves ?? this.level.moves;
     this.busy = false;
     this.selected = null;
   }
@@ -89,12 +119,29 @@ export class GameScene extends Phaser.Scene {
 
     this.sprites = Array.from({ length: BOARD_SIZE }, () => new Array(BOARD_SIZE).fill(null));
     this.board = new Board();
-    this.board.fillInitial();
+    // Wznow przerwana partie, jesli scena zostala przebudowana po zmianie
+    // rozmiaru plotna; zapis z innego rozmiaru planszy jest odrzucany.
+    const restored = !!this.restoreGrid && this.board.loadGrid(this.restoreGrid);
+    if (!restored) {
+      this.board.fillInitial();
+      this.score = 0;
+      this.movesLeft = this.level.moves;
+    }
+    this.restoreGrid = null;
     this.renderFullBoard();
 
     this.buildHUD();
 
     this.input.on("gameobjectdown", this.onCellClicked, this);
+
+    if (restored) {
+      // Przebudowa mogla trafic w srodek kaskady, gdy plansza ma dziury po
+      // zbitych klejnotach. Nic by ich wtedy nie zasypalo, bo animacja, ktora
+      // miala to zrobic, zginela razem ze stara scena — wiec domykamy kaskade
+      // recznie. Przy planszy bez dziur to tylko sprawdzenie i zwolnienie blokady.
+      this.busy = true;
+      this.time.delayedCall(0, () => this.fallAndRefill());
+    }
 
     AudioManager.playMusic();
   }

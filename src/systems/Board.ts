@@ -59,6 +59,23 @@ export class Board {
     }
   }
 
+  /** Odtwarza plansze z zapisanego stanu (uzywane przy zmianie rozmiaru
+   *  plotna, np. wejsciu w pelny ekran — scena jest budowana od nowa, ale
+   *  rozgrywka ma trwac dalej). Zwraca false, gdy zapis nie pasuje do
+   *  biezacego rozmiaru planszy, zeby wolajacy mogl rozdac nowa. */
+  loadGrid(cells: (Pick<Cell, "type" | "special" | "magicTarget"> | null)[][]): boolean {
+    if (!Array.isArray(cells) || cells.length !== BOARD_SIZE) return false;
+    if (cells.some((row) => !Array.isArray(row) || row.length !== BOARD_SIZE)) return false;
+
+    for (let r = 0; r < BOARD_SIZE; r++) {
+      for (let c = 0; c < BOARD_SIZE; c++) {
+        const saved = cells[r][c];
+        this.grid[r][c] = saved ? { ...saved, row: r, col: c } : null;
+      }
+    }
+    return true;
+  }
+
   private wouldMatchAt(row: number, col: number, type: GemType): boolean {
     // Check two-to-the-left horizontal
     if (col >= 2) {

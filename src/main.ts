@@ -40,8 +40,8 @@ function designSize() {
   let h = window.innerHeight;
   // Gra jest pozioma i prosi uzytkownika o obrocenie telefonu, wiec na
   // pionowym ekranie dotykowym liczymy proporcje od razu tak, jak beda
-  // wygladac po obrocie. Dzieki temu plotno pasuje juz przy starcie i nie
-  // trzeba go przemierzac (co przesunieloby gotowy uklad sceny).
+  // wygladac po obrocie — plotno pasuje juz przy starcie, zamiast wymuszac
+  // przebudowe scen zaraz po pierwszym obrocie (patrz relayout ponizej).
   if (h > w && window.matchMedia("(pointer: coarse)").matches) [w, h] = [h, w];
   const width = Math.round(Math.min(2600, Math.max(1500, height * (w / h))));
   return { width, height };
@@ -49,7 +49,7 @@ function designSize() {
 
 const { width, height } = designSize();
 
-new Phaser.Game({
+const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: "game",
   backgroundColor: "#04374d",
@@ -62,13 +62,63 @@ new Phaser.Game({
   scene: [BootScene, MainMenuScene, OptionsScene, LevelSelectScene, GameScene, VictoryScene, DefeatScene, AquariumScene],
 });
 
-// Android/Chrome chowa pasek adresu dopiero w trybie pelnoekranowym, a ten
-// wolno wlaczyc wylacznie z gestu uzytkownika — stad pierwsze dotkniecie.
-document.addEventListener(
-  "pointerdown",
-  () => {
-    const isTouch = window.matchMedia("(pointer: coarse)").matches;
-    if (isTouch && !document.fullscreenElement) void document.documentElement.requestFullscreen?.().catch(() => {});
-  },
-  { once: true }
-);
+/**
+ * Przelicza uklad po zmianie proporcji okna — po wejsciu/wyjsciu z pelnego
+ * ekranu, obroceniu telefonu albo zmianie rozmiaru okna na komputerze.
+ *
+ * Samo `setGameSize` nie wystarcza: sceny licza swoj uklad raz, przy tworzeniu,
+ * wiec po zmianie rozmiaru trzeba je zbudowac na nowo. Kazda scena dostaje z
+ * powrotem dane, z ktorymi wystartowala, a plansza dodatkowo migawke stanu
+ * partii, zeby zmiana rozmiaru nie kasowala trwajacego poziomu.
+ */
+function relayout() {
+  const next = designSize();
+  const nextAspect = next.width / next.height;
+  if (Math.abs(nextAspect - lastAspect) < 0.02) return;
+  lastAspect = nextAspect;
+  game.scale.setGameSize(next.width, next.height);
+
+  // Kopia listy: restart() zmienia zbior aktywnych scen w trakcie iteracji.
+  for (const scene of [...game.scene.getScenes(true)]) {
+    const withSnapshot = scene as Phaser.Scene & { snapshot?: () => object };
+    const data = typeof withSnapshot.snapshot === "function" ? withSnapshot.snapshot() : scene.scene.settings.data;
+    scene.scene.restart(data);
+  }
+}
+
+let lastAspect = width / height;
+let relayoutTimer = 0;
+const scheduleRelayout = () => {
+  window.clearTimeout(relayoutTimer);
+  // Zmiana rozmiaru sypie zdarzeniami seriami; przebudowujemy dopiero gdy ucichna.
+  relayoutTimer = window.setTimeout(relayout, 250);
+};
+window.addEventListener("resize", scheduleRelayout);
+window.addEventListener("orientationchange", scheduleRelayout);
+document.addEventListener("fullscreenchange", scheduleRelayout);
+
+// --- Przelacznik pelnego ekranu ---------------------------------------------
+
+const fullscreenBtn = document.getElementById("fullscreen");
+const canFullscreen = !!document.documentElement.requestFullscreen;
+
+if (fullscreenBtn) {
+  if (!canFullscreen) {
+    // iPhone/Safari nie wspiera Fullscreen API — przycisk bylby martwy.
+    fullscreenBtn.classList.add("unsupported");
+  } else {
+    const syncIcon = () => {
+      const on = !!document.fullscreenElement;
+      fullscreenBtn.textContent = on ? "⤡" : "⛶";
+      fullscreenBtn.title = on ? "Wyjdź z pełnego ekranu" : "Pełny ekran";
+      fullscreenBtn.setAttribute("aria-label", fullscreenBtn.title);
+    };
+    fullscreenBtn.addEventListener("click", () => {
+      AudioManager.unlock();
+      if (document.fullscreenElement) void document.exitFullscreen().catch(() => {});
+      else void document.documentElement.requestFullscreen().catch(() => {});
+    });
+    document.addEventListener("fullscreenchange", syncIcon);
+    syncIcon();
+  }
+}
