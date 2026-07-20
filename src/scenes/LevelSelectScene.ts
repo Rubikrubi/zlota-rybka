@@ -34,25 +34,25 @@ export class LevelSelectScene extends Phaser.Scene {
 
     const unlocked = SaveSystem.get().currentLevel;
     const cols = 5;
-    const startX = width / 2 - ((cols - 1) * 220) / 2;
+    const startX = width / 2 - ((cols - 1) * 240) / 2;
     const startY = 230;
 
     LEVELS.forEach((lvl, i) => {
       const col = i % cols;
       const row = Math.floor(i / cols);
-      const x = startX + col * 220;
-      const y = startY + row * 220;
+      const x = startX + col * 240;
+      const y = startY + row * 250;
       const isLocked = lvl.id > unlocked;
       const stars = SaveSystem.get().levelStars[lvl.id] ?? 0;
 
       const circleColor = isLocked ? 0x395364 : 0x2fb6e0;
-      const circle = this.add.circle(x, y, 70, circleColor).setStrokeStyle(5, 0xffffff, 0.9);
+      const circle = this.add.circle(x, y, 88, circleColor).setStrokeStyle(5, 0xffffff, 0.9);
       if (!isLocked) circle.setInteractive({ useHandCursor: true });
 
       this.add
-        .text(x, y - 8, isLocked ? "🔒" : `${lvl.id}`, {
+        .text(x, y - 10, isLocked ? "🔒" : `${lvl.id}`, {
           fontFamily: "Bangers",
-          fontSize: "40px",
+          fontSize: "58px",
           color: "#ffffff",
         })
         .setOrigin(0.5);
@@ -60,19 +60,19 @@ export class LevelSelectScene extends Phaser.Scene {
       if (!isLocked) {
         const starStr = "★".repeat(stars) + "☆".repeat(3 - stars);
         this.add
-          .text(x, y + 34, starStr, { fontFamily: "Arial", fontSize: "18px", color: "#ffe27a" })
+          .text(x, y + 44, starStr, { fontFamily: "Arial", fontSize: "26px", color: "#ffe27a" })
           .setOrigin(0.5);
       }
 
       this.add
-        .text(x, y + 92, lvl.name, {
+        .text(x, y + 108, lvl.name, {
           fontFamily: "Arial",
-          fontSize: "15px",
+          fontSize: "22px",
           color: isLocked ? "#7d97a5" : "#eafcff",
           align: "center",
           // Polish level names run longer than the 220px grid pitch, so wrap
           // them instead of letting neighbouring labels collide.
-          wordWrap: { width: 200 },
+          wordWrap: { width: 224 },
         })
         .setOrigin(0.5, 0);
 
@@ -90,11 +90,11 @@ export class LevelSelectScene extends Phaser.Scene {
     });
 
     // Bottom nav bar
-    makeButton(this, width / 2 - 260, height - 80, 300, 80, "AKWARIUM", "#59c86b", () => {
+    makeButton(this, width / 2 - 250, height - 90, 420, 130, "AKWARIUM", "#59c86b", () => {
       AudioManager.play("click");
       this.scene.start("Aquarium");
     });
-    makeButton(this, width / 2 + 260, height - 80, 300, 80, "MENU", "#ff9f5a", () => {
+    makeButton(this, width / 2 + 250, height - 90, 420, 130, "MENU", "#ff9f5a", () => {
       AudioManager.play("click");
       this.scene.start("MainMenu");
     });

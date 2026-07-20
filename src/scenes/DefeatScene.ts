@@ -46,12 +46,12 @@ export class DefeatScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    makeButton(this, width / 2, height * 0.66, 340, 80, "JESZCZE RAZ", "#3fd0ff", () => {
+    makeButton(this, width / 2, height * 0.72, 420, 140, "JESZCZE RAZ", "#3fd0ff", () => {
       AudioManager.play("click");
       this.scene.start("Game", { levelId: data.level.id });
     });
 
-    makeButton(this, width / 2, height * 0.78, 340, 70, "MAPA POZIOMÓW", "#ff9f5a", () => {
+    makeButton(this, width / 2, height * 0.885, 420, 140, "MAPA POZIOMÓW", "#ff9f5a", () => {
       AudioManager.play("click");
       this.scene.start("LevelSelect");
     });

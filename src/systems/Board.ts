@@ -8,7 +8,10 @@
  */
 import { Cell, GemType, NORMAL_GEM_TYPES, SpecialType } from "../config/GemTypes";
 
-export const BOARD_SIZE = 8;
+// 7x7, nie 8x8: na wysokosci ekranu telefonu osiem rzedow daje kafelki
+// 43-49 px CSS, czyli ponizej progu wygodnego dotyku (44 px Apple / 48 dp
+// Android). Siedem rzedow podnosi kafelek do ~54 px.
+export const BOARD_SIZE = 7;
 
 export interface MatchGroup {
   cells: { row: number; col: number }[];

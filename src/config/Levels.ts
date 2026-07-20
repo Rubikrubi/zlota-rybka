@@ -13,17 +13,19 @@ export interface LevelConfig {
   reward: number; // coins awarded on victory
 }
 
+// Progi punktowe obnizone o ~22% wzgledem wersji na plansze 8x8: przy 7x7 jest
+// 49 pol zamiast 64, wiec kaskady sa krotsze i punkty zbieraja sie wolniej.
 export const LEVELS: LevelConfig[] = [
-  { id: 1, name: "Płytka Zatoczka", goal: 3000, moves: 20, reward: 50 },
-  { id: 2, name: "Ogród Wodorostów", goal: 5000, moves: 25, reward: 60 },
-  { id: 3, name: "Bąbelkowa Rafa", goal: 7000, moves: 22, reward: 70 },
-  { id: 4, name: "Zatopione Ruiny", goal: 9000, moves: 24, reward: 80 },
-  { id: 5, name: "Perłowa Grota", goal: 12000, moves: 26, reward: 100 },
-  { id: 6, name: "Kryształowy Rów", goal: 15000, moves: 25, reward: 120 },
-  { id: 7, name: "Koralowy Labirynt", goal: 18000, moves: 27, reward: 140 },
-  { id: 8, name: "Rozgwiazdowe Mielizny", goal: 22000, moves: 28, reward: 160 },
-  { id: 9, name: "Morska Otchłań", goal: 26000, moves: 30, reward: 180 },
-  { id: 10, name: "Skarbiec Króla Przypływów", goal: 32000, moves: 30, reward: 250 },
+  { id: 1, name: "Płytka Zatoczka", goal: 2400, moves: 20, reward: 50 },
+  { id: 2, name: "Ogród Wodorostów", goal: 4000, moves: 25, reward: 60 },
+  { id: 3, name: "Bąbelkowa Rafa", goal: 5500, moves: 22, reward: 70 },
+  { id: 4, name: "Zatopione Ruiny", goal: 7000, moves: 24, reward: 80 },
+  { id: 5, name: "Perłowa Grota", goal: 9500, moves: 26, reward: 100 },
+  { id: 6, name: "Kryształowy Rów", goal: 11500, moves: 25, reward: 120 },
+  { id: 7, name: "Koralowy Labirynt", goal: 14000, moves: 27, reward: 140 },
+  { id: 8, name: "Rozgwiazdowe Mielizny", goal: 17000, moves: 28, reward: 160 },
+  { id: 9, name: "Morska Otchłań", goal: 20000, moves: 30, reward: 180 },
+  { id: 10, name: "Skarbiec Króla Przypływów", goal: 25000, moves: 30, reward: 250 },
 ];
 
 export function getLevel(id: number): LevelConfig {

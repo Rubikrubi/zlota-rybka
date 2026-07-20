@@ -6,6 +6,15 @@
  */
 import Phaser from "phaser";
 
+/** Najmniejszy przycisk, jaki wolno narysowac, w pikselach projektowych.
+ *  Plotno o wysokosci 1080 skaluje sie na telefonie do ~360-410 px CSS, czyli
+ *  1 px projektowy to ~0.33 px CSS. 140 px projektowych daje ~47 px pod palcem
+ *  nawet na najciasniejszym ekranie (360 px CSS wysokosci),
+ *  a to prog wygodnego dotyku (44 px Apple / 48 dp Android). Wymuszamy to tutaj,
+ *  zeby zaden ekran nie mogl przypadkiem narysowac przycisku ponizej progu. */
+const MIN_W = 260;
+const MIN_H = 140;
+
 export function makeButton(
   scene: Phaser.Scene,
   x: number,
@@ -15,9 +24,11 @@ export function makeButton(
   label: string,
   color: string,
   onClick: () => void,
-  fontSize = 34
+  fontSize = 40
 ): Phaser.GameObjects.Container {
   const container = scene.add.container(x, y);
+  w = Math.max(w, MIN_W);
+  h = Math.max(h, MIN_H);
 
   const colorInt = Phaser.Display.Color.HexStringToColor(color).color;
   const shadow = scene.add.rectangle(4, 6, w, h, 0x00131a, 0.35).setOrigin(0.5);

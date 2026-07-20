@@ -25,7 +25,7 @@ export class VictoryScene extends Phaser.Scene {
     this.add.rectangle(width / 2, height / 2, width, height, 0x012535, 0.55);
 
     this.add
-      .text(width / 2, height * 0.22, "POZIOM UKOŃCZONY!", {
+      .text(width / 2, height * 0.18, "POZIOM UKOŃCZONY!", {
         fontFamily: "Bangers",
         fontSize: "64px",
         color: "#ffe27a",
@@ -38,7 +38,7 @@ export class VictoryScene extends Phaser.Scene {
     for (let i = 0; i < 3; i++) {
       const filled = i < data.stars;
       const star = this.add
-        .text(width / 2 + (i - 1) * 90, height * 0.36, filled ? "★" : "☆", {
+        .text(width / 2 + (i - 1) * 90, height * 0.31, filled ? "★" : "☆", {
           fontFamily: "Arial",
           fontSize: "72px",
           color: filled ? "#ffe27a" : "#4a5f6b",
@@ -55,7 +55,7 @@ export class VictoryScene extends Phaser.Scene {
     }
 
     this.add
-      .text(width / 2, height * 0.5, `Wynik: ${data.score}`, {
+      .text(width / 2, height * 0.44, `Wynik: ${data.score}`, {
         fontFamily: "Bangers",
         fontSize: "36px",
         color: "#ffffff",
@@ -63,7 +63,7 @@ export class VictoryScene extends Phaser.Scene {
       .setOrigin(0.5);
 
     this.add
-      .text(width / 2, height * 0.58, `Zdobyto +${data.level.reward} monet!`, {
+      .text(width / 2, height * 0.52, `Zdobyto +${data.level.reward} monet!`, {
         fontFamily: "Bangers",
         fontSize: "30px",
         color: "#7fffbf",
@@ -73,18 +73,18 @@ export class VictoryScene extends Phaser.Scene {
     const hasNext = LEVELS.some((l) => l.id === data.level.id + 1);
 
     if (hasNext) {
-      makeButton(this, width / 2, height * 0.72, 440, 80, "NASTĘPNY POZIOM", "#3fd0ff", () => {
+      makeButton(this, width / 2, height * 0.63, 520, 140, "NASTĘPNY POZIOM", "#3fd0ff", () => {
         AudioManager.play("click");
         this.scene.start("Game", { levelId: data.level.id + 1 });
       });
     }
 
-    makeButton(this, width / 2, height * (hasNext ? 0.84 : 0.72), 340, 74, "AKWARIUM", "#59c86b", () => {
+    makeButton(this, width / 2, height * 0.775, 420, 140, "AKWARIUM", "#59c86b", () => {
       AudioManager.play("click");
       this.scene.start("Aquarium");
     });
 
-    makeButton(this, width / 2, height * (hasNext ? 0.94 : 0.86), 340, 66, "MAPA POZIOMÓW", "#ff9f5a", () => {
+    makeButton(this, width / 2, height * 0.92, 420, 140, "MAPA POZIOMÓW", "#ff9f5a", () => {
       AudioManager.play("click");
       this.scene.start("LevelSelect");
     }, 26);

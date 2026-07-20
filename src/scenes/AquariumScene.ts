@@ -58,13 +58,13 @@ export class AquariumScene extends Phaser.Scene {
       .text(width - 40, 40, `🪙 ${SaveSystem.get().coins}`, { fontFamily: "Bangers", fontSize: "34px", color: "#ffe27a" })
       .setOrigin(1, 0);
 
-    makeButton(this, 150, 60, 220, 70, "◀ WSTECZ", "#ff9f5a", () => {
+    makeButton(this, 175, 85, 300, 130, "◀ WSTECZ", "#ff9f5a", () => {
       AudioManager.play("click");
       this.persistPlacements();
       this.scene.start("LevelSelect");
     }, 26);
 
-    makeButton(this, width / 2, height - 60, 300, 78, "SKLEP", "#59c86b", () => {
+    makeButton(this, width / 2, height - 85, 380, 130, "SKLEP", "#59c86b", () => {
       AudioManager.play("click");
       this.toggleShop();
     });
@@ -237,7 +237,7 @@ export class AquariumScene extends Phaser.Scene {
       }
     });
 
-    const closeBtn = makeButton(this, width / 2, height / 2 + 370, 260, 66, "ZAMKNIJ", "#ff5a5a", () => this.toggleShop());
+    const closeBtn = makeButton(this, width / 2, height / 2 + 330, 340, 130, "ZAMKNIJ", "#ff5a5a", () => this.toggleShop());
     container.add(closeBtn);
   }
 

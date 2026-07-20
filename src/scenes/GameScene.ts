@@ -16,7 +16,8 @@ import { SaveSystem } from "../systems/SaveSystem";
 // The board is sized to the screen rather than to a constant, so gems stay
 // thumb-sized on a phone. See layoutBoard().
 const MIN_CELL = 72;
-const EDGE = 24; // breathing room between the board and the screen edge
+const GEM_INSET = 6; // px trimmed off the artwork so neighbours stay distinct
+const EDGE = 16; // breathing room between the board and the screen edge
 const SIDE_GUTTER = 300; // width reserved for a HUD column in the side layout
 const TOP_BAND = 190; // height reserved for the HUD band in the stacked layout
 
@@ -211,10 +212,21 @@ export class GameScene extends Phaser.Scene {
   private createSprite(row: number, col: number, cell: Cell): Phaser.GameObjects.Image {
     const { x, y } = this.cellToWorld(row, col);
     const img = this.add.image(x, y, this.textureFor(cell));
-    // Gems fill most of the cell; the small inset keeps neighbours distinct.
-    img.setDisplaySize(this.cell - 12, this.cell - 12);
+    // Gems fill nearly the whole cell; the small inset keeps neighbours distinct.
+    img.setDisplaySize(this.cell - GEM_INSET, this.cell - GEM_INSET);
     img.setDepth(DEPTH_GEM);
-    img.setInteractive({ useHandCursor: true });
+
+    // Hit area spans the FULL cell, not just the artwork, so the gaps between
+    // gems are not dead zones — on a phone those few pixels are the difference
+    // between a tap landing and being ignored. Phaser hit-tests in texture
+    // pixels, so the rectangle is scaled back up by the sprite's own scale.
+    const hit = this.cell / img.scaleX;
+    img.setInteractive(
+      new Phaser.Geom.Rectangle((img.width - hit) / 2, (img.height - hit) / 2, hit, hit),
+      Phaser.Geom.Rectangle.Contains
+    );
+    if (img.input) img.input.cursor = "pointer";
+
     this.sprites[row][col] = img;
     return img;
   }

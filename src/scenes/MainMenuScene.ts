@@ -34,9 +34,11 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     // Hero goldfish with a soft breathing tween plus a gentle swimming bob.
-    const fish = this.add.image(width / 2, height * 0.21, "logo_goldfish").setScale(0.7);
+    // Nieco mniejsza niz wczesniej — przyciski ponizej musialy urosnac do
+    // rozmiaru wygodnego pod palec i potrzebowaly pionowego miejsca.
+    const fish = this.add.image(width / 2, height * 0.17, "logo_goldfish").setScale(0.55);
     new Tween(fish, this.tweenGroup)
-      .to({ scale: 0.76 }, 1600)
+      .to({ scale: 0.6 }, 1600)
       .easing(Easing.Sinusoidal.InOut)
       .yoyo(true)
       .repeat(Infinity)
@@ -52,7 +54,7 @@ export class MainMenuScene extends Phaser.Scene {
     });
 
     const title = this.add
-      .text(width / 2, height * 0.45, "ZŁOTA RYBKA", {
+      .text(width / 2, height * 0.4, "ZŁOTA RYBKA", {
         fontFamily: "Bangers",
         fontSize: "112px",
         color: "#ffd54a",
@@ -69,7 +71,7 @@ export class MainMenuScene extends Phaser.Scene {
     title.setShadow(0, 8, "#00252f", 14, false, true);
 
     this.add
-      .text(width / 2, height * 0.53, "Przytulna podwodna przygoda match-3", {
+      .text(width / 2, height * 0.478, "Przytulna podwodna przygoda match-3", {
         fontFamily: "Bangers",
         fontSize: "34px",
         color: "#eafcff",
@@ -78,14 +80,17 @@ export class MainMenuScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    makeButton(this, width / 2, height * 0.6, 340, 84, "GRAJ", "#3fd0ff", () => {
+    // Przyciski celowo duze: przy skalowaniu plotna na telefon 1 px projektowy
+    // to ~0.35 px CSS, wiec 150 px projektowych daje ~53 px pod palcem —
+    // powyzej progu 44 px (Apple) / 48 dp (Android).
+    makeButton(this, width / 2, height * 0.585, 420, 150, "GRAJ", "#3fd0ff", () => {
       AudioManager.unlock();
       AudioManager.play("click");
       this.cameras.main.fadeOut(400, 4, 20, 40);
       this.cameras.main.once("camerafadeoutcomplete", () => this.scene.start("LevelSelect"));
     });
 
-    makeButton(this, width / 2, height * 0.73, 340, 74, "OPCJE", "#ff9f5a", () => {
+    makeButton(this, width / 2, height * 0.737, 420, 140, "OPCJE", "#ff9f5a", () => {
       AudioManager.unlock();
       AudioManager.play("click");
       this.scene.launch("Options");
@@ -96,9 +101,9 @@ export class MainMenuScene extends Phaser.Scene {
     makeButton(
       this,
       width / 2,
-      height * 0.84,
-      340,
-      64,
+      height * 0.884,
+      420,
+      140,
       "⬇ POBIERZ KOD",
       "#7a5cff",
       () => {
@@ -106,13 +111,13 @@ export class MainMenuScene extends Phaser.Scene {
         AudioManager.play("click");
         downloadGameSource();
       },
-      24
+      34
     );
 
     this.add
-      .text(width / 2, height * 0.94, `Monety: ${SaveSystem.get().coins}`, {
+      .text(width / 2, height * 0.977, `Monety: ${SaveSystem.get().coins}`, {
         fontFamily: "Bangers",
-        fontSize: "26px",
+        fontSize: "34px",
         color: "#ffe27a",
       })
       .setOrigin(0.5);
