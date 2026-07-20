@@ -38,12 +38,12 @@ export class BootScene extends Phaser.Scene {
     });
 
     // Gem + bonus icons
-    for (const [type, key] of Object.entries(GEM_TEXTURES)) this.load.image(key, `/sprites/${key}.png`);
-    for (const [type, key] of Object.entries(SPECIAL_TEXTURES)) this.load.image(key, `/sprites/${key}.png`);
+    for (const [type, key] of Object.entries(GEM_TEXTURES)) this.load.image(key, `sprites/${key}.png`);
+    for (const [type, key] of Object.entries(SPECIAL_TEXTURES)) this.load.image(key, `sprites/${key}.png`);
     this.load.image("particle_sparkle", "sprites/particle_sparkle.png");
 
     // Fish + decorations
-    for (const item of [...DECOR_SHOP, ...FISH_SHOP]) this.load.image(item.texture, `/sprites/${item.texture}.png`);
+    for (const item of [...DECOR_SHOP, ...FISH_SHOP]) this.load.image(item.texture, `sprites/${item.texture}.png`);
 
     // Backgrounds + logo
     this.load.image("bg_menu", "sprites/bg_menu.png");
