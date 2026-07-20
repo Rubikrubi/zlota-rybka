@@ -118,8 +118,7 @@ export class MainMenuScene extends Phaser.Scene {
       .text(width / 2, height * 0.977, `Monety: ${SaveSystem.get().coins}`, {
         fontFamily: "Bangers",
         fontSize: "34px",
-        color: "#ffe27a",
-      })
+        color: "#ffe27a", stroke: "#00151d", strokeThickness: 5 })
       .setOrigin(0.5);
 
     // Resume main menu once Options scene is closed.

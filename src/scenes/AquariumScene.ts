@@ -12,8 +12,20 @@ import { PlacedItem, SaveSystem } from "../systems/SaveSystem";
 import { AudioManager } from "../systems/AudioManager";
 import { makeButton } from "../ui/Button";
 
-// Tank viewport rectangle in screen space (normalized coords map inside this box).
+// Prostokat akwarium w przestrzeni ekranu (pozycje przedmiotow sa zapisywane
+// jako 0..1 wewnatrz niego). Liczony z rozmiaru plotna, bo szerokosc zalezy od
+// proporcji ekranu — na sztywno wpisane 1400 px zostawialo akwarium przesuniete
+// w lewo na szerokim ekranie telefonu.
 const TANK = { x: 260, y: 190, w: 1400, h: 760 };
+
+function computeTank(width: number, height: number) {
+  const w = Math.min(1900, width - 260);
+  const h = height - 190 - 200; // gora: tytul i licznik monet, dol: przycisk sklepu
+  TANK.w = w;
+  TANK.h = h;
+  TANK.x = Math.round(width / 2 - w / 2);
+  TANK.y = 190;
+}
 
 interface LiveFish {
   img: Phaser.GameObjects.Image;
@@ -28,6 +40,7 @@ export class AquariumScene extends Phaser.Scene {
   private placed: PlacedItem[] = [];
   private liveFish: LiveFish[] = [];
   private shopOpen = false;
+  private shopPage = 0;
   private shopContainer: Phaser.GameObjects.Container | null = null;
   private draggingImg: Phaser.GameObjects.Image | null = null;
   private coinText!: Phaser.GameObjects.Text;
@@ -38,6 +51,8 @@ export class AquariumScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.cameras.main;
+    computeTank(width, height);
+
     const bg = this.add.image(width / 2, height / 2, "bg_aquarium");
     bg.setDisplaySize(width, height);
 
@@ -45,7 +60,7 @@ export class AquariumScene extends Phaser.Scene {
     this.add.rectangle(TANK.x + TANK.w / 2, TANK.y + TANK.h / 2, TANK.w, TANK.h, 0xffffff, 0.03).setStrokeStyle(6, 0x38e8ff, 0.7);
 
     this.add
-      .text(width / 2, 60, "MOJE AKWARIUM", {
+      .text(width / 2, 55, "MOJE AKWARIUM", {
         fontFamily: "Bangers",
         fontSize: "52px",
         color: "#ffffff",
@@ -54,9 +69,10 @@ export class AquariumScene extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    this.coinText = this.add
-      .text(width - 40, 40, `🪙 ${SaveSystem.get().coins}`, { fontFamily: "Bangers", fontSize: "34px", color: "#ffe27a" })
-      .setOrigin(1, 0);
+    // Licznik monet na srodku u gory: w rogu bywal ucinany przez zaokraglone
+    // rogi ekranu telefonu, a zloty napis na jasnym tle akwarium byl slabo
+    // czytelny. Ciemna plakietka daje kontrast niezalezny od tla.
+    this.buildCoinBadge(width);
 
     makeButton(this, 175, 85, 300, 130, "◀ WSTECZ", "#ff9f5a", () => {
       AudioManager.play("click");
@@ -79,6 +95,34 @@ export class AquariumScene extends Phaser.Scene {
     this.events.on("shutdown", () => this.persistPlacements());
   }
 
+  /** Plakietka z liczba monet: ciemne tlo, zloty obrys, duzy napis z czarna
+   *  obwodka — czytelna zarowno na jasnym piasku, jak i na ciemnej wodzie. */
+  private buildCoinBadge(width: number) {
+    const y = 130;
+    const badge = this.add.rectangle(width / 2, y, 360, 84, 0x03202c, 0.92).setStrokeStyle(4, 0xffc93c, 0.95);
+    badge.setDepth(20);
+
+    this.add
+      .text(width / 2 - 128, y, "🪙", { fontSize: "52px" })
+      .setOrigin(0.5)
+      .setDepth(21);
+
+    this.coinText = this.add
+      .text(width / 2 + 26, y, `${SaveSystem.get().coins}`, {
+        fontFamily: "Bangers",
+        fontSize: "52px",
+        color: "#ffffff",
+        stroke: "#00151d",
+        strokeThickness: 7,
+      })
+      .setOrigin(0.5)
+      .setDepth(21);
+  }
+
+  private refreshCoins() {
+    this.coinText.setText(`${SaveSystem.get().coins}`);
+  }
+
   // --- Placement / spawning ------------------------------------------------
 
   private spawnAllPlacedItems() {
@@ -91,6 +135,7 @@ export class AquariumScene extends Phaser.Scene {
     const x = TANK.x + item.x * TANK.w;
     const y = TANK.y + item.y * TANK.h;
     const img = this.add.image(x, y, item.texture).setScale(item.scale);
+    if (item.tint !== undefined) img.setTint(item.tint);
     img.setInteractive({ useHandCursor: true, draggable: true });
     this.input.setDraggable(img);
     img.setData("placedRef", item);
@@ -140,7 +185,7 @@ export class AquariumScene extends Phaser.Scene {
     });
     // little heart burst
     const heart = this.add
-      .text(img.x, img.y - 40, "♥", { fontFamily: "Arial", fontSize: "28px", color: "#ff7f9f" })
+      .text(img.x, img.y - 40, "♥", { fontFamily: "Arial", fontSize: "28px", color: "#ff7f9f", stroke: "#00151d", strokeThickness: 4 })
       .setOrigin(0.5);
     this.tweens.add({ targets: heart, y: heart.y - 40, alpha: 0, duration: 600, onComplete: () => heart.destroy() });
   }
@@ -168,46 +213,77 @@ export class AquariumScene extends Phaser.Scene {
     if (this.shopOpen) this.buildShop();
   }
 
+  /** Przerysowuje sklep zachowujac otwarta strone — po zakupie trzeba odswiezyc
+   *  karty, ale przerzucenie gracza na pierwsza strone byloby irytujace. */
+  private rebuildShop() {
+    if (this.shopContainer) {
+      this.shopContainer.destroy();
+      this.shopContainer = null;
+    }
+    this.buildShop();
+  }
+
   private buildShop() {
     const { width, height } = this.cameras.main;
     const container = this.add.container(0, 0);
     this.shopContainer = container;
 
-    const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x001824, 0.8).setInteractive();
-    const panel = this.add.rectangle(width / 2, height / 2, 1400, 820, 0x0c3f56).setStrokeStyle(5, 0x38e8ff);
+    const overlay = this.add.rectangle(width / 2, height / 2, width, height, 0x001824, 0.85).setInteractive();
+    const panel = this.add.rectangle(width / 2, height / 2, 1400, 900, 0x0c3f56).setStrokeStyle(5, 0x38e8ff);
     container.add([overlay, panel]);
-
-    container.add(
-      this.add
-        .text(width / 2, height / 2 - 380, "SKLEP Z DEKORACJAMI", { fontFamily: "Bangers", fontSize: "42px", color: "#ffffff" })
-        .setOrigin(0.5)
-    );
 
     const allItems: ShopItem[] = [...DECOR_SHOP, ...FISH_SHOP];
     const cols = 6;
-    const cellW = 210;
-    const cellH = 230;
-    const startX = width / 2 - ((cols - 1) * cellW) / 2;
-    const startY = height / 2 - 260;
+    const rows = 2;
+    const perPage = cols * rows;
+    const pages = Math.ceil(allItems.length / perPage);
+    this.shopPage = Phaser.Math.Clamp(this.shopPage, 0, pages - 1);
 
-    allItems.forEach((item, i) => {
-      const col = i % cols;
-      const row = Math.floor(i / cols);
-      const x = startX + col * cellW;
-      const y = startY + row * cellH;
+    container.add(
+      this.add
+        .text(width / 2, height / 2 - 400, `SKLEP  —  strona ${this.shopPage + 1} / ${pages}`, {
+          fontFamily: "Bangers",
+          fontSize: "44px",
+          color: "#ffffff",
+          stroke: "#00151d",
+          strokeThickness: 6,
+        })
+        .setOrigin(0.5)
+    );
+
+    const cellW = 210;
+    const cellH = 260; // wyzsze karty: nazwa przedmiotu musi byc czytelna na telefonie
+    const startX = width / 2 - ((cols - 1) * cellW) / 2;
+    const startY = height / 2 - 200;
+    const shown = allItems.slice(this.shopPage * perPage, (this.shopPage + 1) * perPage);
+
+    shown.forEach((item, i) => {
+      const x = startX + (i % cols) * cellW;
+      const y = startY + Math.floor(i / cols) * cellH;
 
       const owned =
         item.category === "decor" ? SaveSystem.get().ownedDecor.includes(item.key) : SaveSystem.get().ownedFish.includes(item.key);
 
-      const card = this.add.rectangle(x, y, 180, 200, 0x0a2e40).setStrokeStyle(3, owned ? 0x59c86b : 0x38e8ff, 0.8);
-      const icon = this.add.image(x, y - 35, item.texture).setScale((item.scale ?? 0.5) * 0.9);
-      const name = this.add.text(x, y + 40, item.name, { fontFamily: "Arial", fontSize: "15px", color: "#eafcff" }).setOrigin(0.5);
+      const card = this.add.rectangle(x, y, 188, 240, 0x0a2e40).setStrokeStyle(3, owned ? 0x59c86b : 0x38e8ff, 0.8);
+      const icon = this.add.image(x, y - 66, item.texture).setScale((item.scale ?? 0.5) * 0.8);
+      if (item.tint !== undefined) icon.setTint(item.tint);
+      const name = this.add
+        .text(x, y - 6, item.name, {
+          fontFamily: "Arial",
+          fontSize: "24px",
+          color: "#ffffff",
+          align: "center",
+          stroke: "#00151d",
+          strokeThickness: 4,
+          wordWrap: { width: 176 },
+        })
+        .setOrigin(0.5, 0);
 
       container.add([card, icon, name]);
 
       if (owned) {
         const placeLabel = this.add
-          .text(x, y + 70, "POSTAW", { fontFamily: "Bangers", fontSize: "20px", color: "#59c86b" })
+          .text(x, y + 88, "POSTAW", { fontFamily: "Bangers", fontSize: "30px", color: "#7dffb0", stroke: "#00151d", strokeThickness: 5 })
           .setOrigin(0.5)
           .setInteractive({ useHandCursor: true });
         placeLabel.on("pointerdown", () => {
@@ -217,7 +293,7 @@ export class AquariumScene extends Phaser.Scene {
         container.add(placeLabel);
       } else {
         const buyLabel = this.add
-          .text(x, y + 70, `🪙 ${item.cost}`, { fontFamily: "Bangers", fontSize: "20px", color: "#ffe27a" })
+          .text(x, y + 88, `🪙 ${item.cost}`, { fontFamily: "Bangers", fontSize: "30px", color: "#ffd54a", stroke: "#00151d", strokeThickness: 5 })
           .setOrigin(0.5)
           .setInteractive({ useHandCursor: true });
         buyLabel.on("pointerdown", () => {
@@ -225,10 +301,9 @@ export class AquariumScene extends Phaser.Scene {
             AudioManager.play("coin");
             if (item.category === "decor") SaveSystem.purchaseDecor(item.key);
             else SaveSystem.purchaseFish(item.key);
-            this.coinText.setText(`🪙 ${SaveSystem.get().coins}`);
+            this.refreshCoins();
             this.placeNewItem(item);
-            this.toggleShop();
-            this.toggleShop(); // rebuild to reflect owned state
+            this.rebuildShop();
           } else {
             this.flashInsufficientFunds(x, y);
           }
@@ -237,12 +312,29 @@ export class AquariumScene extends Phaser.Scene {
       }
     });
 
-    const closeBtn = makeButton(this, width / 2, height / 2 + 330, 340, 130, "ZAMKNIJ", "#ff5a5a", () => this.toggleShop());
-    container.add(closeBtn);
+    // Dolny pasek: strzalki stron po bokach przycisku zamkniecia.
+    const navY = height / 2 + 350;
+    if (this.shopPage > 0) {
+      container.add(
+        makeButton(this, width / 2 - 340, navY, 260, 140, "◀", "#3fd0ff", () => {
+          this.shopPage--;
+          this.rebuildShop();
+        }, 46)
+      );
+    }
+    container.add(makeButton(this, width / 2, navY, 300, 140, "ZAMKNIJ", "#ff5a5a", () => this.toggleShop()));
+    if (this.shopPage < pages - 1) {
+      container.add(
+        makeButton(this, width / 2 + 340, navY, 260, 140, "▶", "#3fd0ff", () => {
+          this.shopPage++;
+          this.rebuildShop();
+        }, 46)
+      );
+    }
   }
 
   private flashInsufficientFunds(x: number, y: number) {
-    const txt = this.add.text(x, y + 100, "Za mało monet!", { fontFamily: "Arial", fontSize: "14px", color: "#ff8080" }).setOrigin(0.5);
+    const txt = this.add.text(x, y + 140, "Za mało monet!", { fontFamily: "Bangers", fontSize: "30px", color: "#ff9b9b", stroke: "#00151d", strokeThickness: 5 }).setOrigin(0.5);
     this.shopContainer?.add(txt);
     this.tweens.add({ targets: txt, alpha: 0, duration: 900, delay: 400, onComplete: () => txt.destroy() });
   }
@@ -255,6 +347,7 @@ export class AquariumScene extends Phaser.Scene {
       x: Phaser.Math.FloatBetween(0.2, 0.8),
       y: Phaser.Math.FloatBetween(0.3, 0.85),
       scale: item.scale ?? 0.5,
+      tint: item.tint,
     };
     this.placed.push(placed);
     this.spawnItem(placed);

@@ -82,6 +82,10 @@ export interface ShopItem {
   cost: number;
   category: "decor" | "fish";
   scale?: number;
+  // Odmiany kolorystyczne dziela grafike z pozycja podstawowa i roznia sie
+  // barwieniem. Nowych rysunkow nie ma, wiec to sposob na urozmaicenie
+  // sklepu bez dokladania plikow.
+  tint?: number;
 }
 
 export const DECOR_SHOP: ShopItem[] = [
@@ -91,6 +95,15 @@ export const DECOR_SHOP: ShopItem[] = [
   { key: "lamp", name: "Lampa Nurka", texture: "deco_lamp", cost: 120, category: "decor", scale: 0.5 },
   { key: "chest", name: "Skrzynia Skarbów", texture: "deco_chest", cost: 150, category: "decor", scale: 0.5 },
   { key: "castle", name: "Zamek z Piasku", texture: "deco_castle", cost: 400, category: "decor", scale: 0.7 },
+
+  { key: "plant_red", name: "Czerwona Roślina", texture: "deco_plant", cost: 90, category: "decor", scale: 0.55, tint: 0xff7a6a },
+  { key: "plant_violet", name: "Fioletowa Roślina", texture: "deco_plant", cost: 110, category: "decor", scale: 0.6, tint: 0xb47aff },
+  { key: "stone_basalt", name: "Bazaltowy Głaz", texture: "deco_stone", cost: 120, category: "decor", scale: 0.65, tint: 0x8fa4b5 },
+  { key: "coral_pink", name: "Różowy Koralowiec", texture: "deco_coral", cost: 140, category: "decor", scale: 0.55, tint: 0xff8fc0 },
+  { key: "coral_gold", name: "Złoty Koralowiec", texture: "deco_coral", cost: 190, category: "decor", scale: 0.6, tint: 0xffd24a },
+  { key: "lamp_emerald", name: "Szmaragdowa Lampa", texture: "deco_lamp", cost: 170, category: "decor", scale: 0.5, tint: 0x7dffb0 },
+  { key: "chest_silver", name: "Srebrna Skrzynia", texture: "deco_chest", cost: 220, category: "decor", scale: 0.5, tint: 0xd6e4ee },
+  { key: "castle_coral", name: "Koralowy Zamek", texture: "deco_castle", cost: 480, category: "decor", scale: 0.7, tint: 0xffb08a },
 ];
 
 export const FISH_SHOP: ShopItem[] = [
@@ -98,4 +111,10 @@ export const FISH_SHOP: ShopItem[] = [
   { key: "coral", name: "Rybka Koralowa", texture: "fish_coral", cost: 100, category: "fish", scale: 0.45 },
   { key: "neon", name: "Neonek", texture: "fish_neon", cost: 150, category: "fish", scale: 0.4 },
   { key: "golden", name: "Złota Płetwa", texture: "fish_golden", cost: 250, category: "fish", scale: 0.5 },
+
+  { key: "bluefin_lemon", name: "Cytrynowa Płetwa", texture: "fish_bluefin", cost: 130, category: "fish", scale: 0.45, tint: 0xffe066 },
+  { key: "coral_turquoise", name: "Turkusowa Rybka", texture: "fish_coral", cost: 160, category: "fish", scale: 0.48, tint: 0x66e0d8 },
+  { key: "neon_red", name: "Czerwony Neonek", texture: "fish_neon", cost: 180, category: "fish", scale: 0.4, tint: 0xff6b6b },
+  { key: "neon_violet", name: "Fioletowy Neonek", texture: "fish_neon", cost: 200, category: "fish", scale: 0.44, tint: 0xc08bff },
+  { key: "golden_pearl", name: "Perłowa Płetwa", texture: "fish_golden", cost: 300, category: "fish", scale: 0.52, tint: 0xdfeaf2 },
 ];

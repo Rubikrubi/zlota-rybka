@@ -41,7 +41,9 @@ export class VictoryScene extends Phaser.Scene {
         .text(width / 2 + (i - 1) * 90, height * 0.31, filled ? "★" : "☆", {
           fontFamily: "Arial",
           fontSize: "72px",
-          color: filled ? "#ffe27a" : "#4a5f6b",
+          color: filled ? "#ffd54a" : "#5d7684",
+          stroke: "#00151d",
+          strokeThickness: 8,
         })
         .setOrigin(0.5)
         .setScale(0);
@@ -58,16 +60,14 @@ export class VictoryScene extends Phaser.Scene {
       .text(width / 2, height * 0.44, `Wynik: ${data.score}`, {
         fontFamily: "Bangers",
         fontSize: "36px",
-        color: "#ffffff",
-      })
+        color: "#ffffff", stroke: "#00151d", strokeThickness: 5 })
       .setOrigin(0.5);
 
     this.add
       .text(width / 2, height * 0.52, `Zdobyto +${data.level.reward} monet!`, {
         fontFamily: "Bangers",
         fontSize: "30px",
-        color: "#7fffbf",
-      })
+        color: "#7fffbf", stroke: "#00151d", strokeThickness: 4 })
       .setOrigin(0.5);
 
     const hasNext = LEVELS.some((l) => l.id === data.level.id + 1);

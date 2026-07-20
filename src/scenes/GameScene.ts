@@ -205,22 +205,22 @@ export class GameScene extends Phaser.Scene {
 
     // Score panel
     this.add.rectangle(leftX, panelY, 260, 96, 0x0c3f56, 0.85).setStrokeStyle(3, 0x38e8ff);
-    this.add.text(leftX, panelY - 24, "WYNIK", { fontFamily: "Arial", fontSize: "20px", color: "#9fe8ff" }).setOrigin(0.5);
+    this.add.text(leftX, panelY - 24, "WYNIK", { fontFamily: "Arial", fontSize: "20px", color: "#9fe8ff", stroke: "#00151d", strokeThickness: 3 }).setOrigin(0.5);
     this.scoreText = this.add
-      .text(leftX, panelY + 14, "0", { fontFamily: "Bangers", fontSize: "40px", color: "#ffffff" })
+      .text(leftX, panelY + 14, "0", { fontFamily: "Bangers", fontSize: "40px", color: "#ffffff", stroke: "#00151d", strokeThickness: 6 })
       .setOrigin(0.5);
 
     // Moves panel
     this.add.rectangle(rightX, panelY, 260, 96, 0x0c3f56, 0.85).setStrokeStyle(3, 0x38e8ff);
-    this.add.text(rightX, panelY - 24, "RUCHY", { fontFamily: "Arial", fontSize: "20px", color: "#9fe8ff" }).setOrigin(0.5);
+    this.add.text(rightX, panelY - 24, "RUCHY", { fontFamily: "Arial", fontSize: "20px", color: "#9fe8ff", stroke: "#00151d", strokeThickness: 3 }).setOrigin(0.5);
     this.movesText = this.add
-      .text(rightX, panelY + 14, `${this.movesLeft}`, { fontFamily: "Bangers", fontSize: "40px", color: "#ffffff" })
+      .text(rightX, panelY + 14, `${this.movesLeft}`, { fontFamily: "Bangers", fontSize: "40px", color: "#ffffff", stroke: "#00151d", strokeThickness: 6 })
       .setOrigin(0.5);
 
     // Goal bar
     const goalX = this.sideHud ? leftX : width / 2;
     this.add
-      .text(goalX, goalY - 26, `Cel: ${this.level.goal}`, { fontFamily: "Arial", fontSize: "20px", color: "#eafcff" })
+      .text(goalX, goalY - 26, `Cel: ${this.level.goal}`, { fontFamily: "Arial", fontSize: "20px", color: "#eafcff", stroke: "#00151d", strokeThickness: 3 })
       .setOrigin(0.5);
     this.add.rectangle(goalX, goalY, this.goalBarWidth, 22, 0x02202c).setStrokeStyle(2, 0x38e8ff);
     this.goalBarFill = this.add

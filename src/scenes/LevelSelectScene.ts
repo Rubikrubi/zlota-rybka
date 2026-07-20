@@ -77,8 +77,7 @@ export class LevelSelectScene extends Phaser.Scene {
       .text(width - 40, 40, `🪙 ${SaveSystem.get().coins}`, {
         fontFamily: "Bangers",
         fontSize: "34px",
-        color: "#ffe27a",
-      })
+        color: "#ffe27a", stroke: "#00151d", strokeThickness: 5 })
       .setOrigin(1, 0);
   }
 
@@ -130,8 +129,7 @@ export class LevelSelectScene extends Phaser.Scene {
         .text(x, y - 10, isLocked ? "🔒" : `${lvl.id}`, {
           fontFamily: "Bangers",
           fontSize: "58px",
-          color: "#ffffff",
-        })
+          color: "#ffffff", stroke: "#00151d", strokeThickness: 8 })
         .setOrigin(0.5);
 
       if (!isLocked) {
@@ -139,17 +137,18 @@ export class LevelSelectScene extends Phaser.Scene {
           .text(x, y + 44, "★".repeat(stars) + "☆".repeat(3 - stars), {
             fontFamily: "Arial",
             fontSize: "26px",
-            color: "#ffe27a",
-          })
+            color: "#ffe27a", stroke: "#00151d", strokeThickness: 4 })
           .setOrigin(0.5);
       }
 
       this.add
         .text(x, y + 108, lvl.name, {
           fontFamily: "Arial",
-          fontSize: "22px",
-          color: isLocked ? "#7d97a5" : "#eafcff",
+          fontSize: "24px",
+          color: isLocked ? "#9fb4c2" : "#ffffff",
           align: "center",
+          stroke: "#00151d",
+          strokeThickness: 4,
           // Polskie nazwy poziomow bywaja dluzsze niz odstep siatki, wiec je
           // lamiemy zamiast pozwolic sasiednim podpisom na siebie wejsc.
           wordWrap: { width: COL_PITCH - 16 },

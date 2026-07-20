@@ -14,6 +14,7 @@ export interface PlacedItem {
   x: number; // normalized 0..1 position inside the aquarium viewport
   y: number;
   scale: number;
+  tint?: number; // odmiany kolorystyczne; brak = grafika w oryginalnych barwach
 }
 
 export interface SaveData {

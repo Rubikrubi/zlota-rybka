@@ -24,8 +24,7 @@ export class BootScene extends Phaser.Scene {
       .text(width / 2, height / 2 - 40, "Ładowanie Złotej Rybki...", {
         fontFamily: "Arial",
         fontSize: "22px",
-        color: "#eaffff",
-      })
+        color: "#eaffff", stroke: "#00151d", strokeThickness: 3 })
       .setOrigin(0.5);
 
     this.load.on("progress", (value: number) => {

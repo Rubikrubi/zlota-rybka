@@ -34,16 +34,14 @@ export class DefeatScene extends Phaser.Scene {
       .text(width / 2, height * 0.45, `Wynik: ${data.score} / ${data.level.goal}`, {
         fontFamily: "Bangers",
         fontSize: "32px",
-        color: "#ffffff",
-      })
+        color: "#ffffff", stroke: "#00151d", strokeThickness: 5 })
       .setOrigin(0.5);
 
     this.add
       .text(width / 2, height * 0.52, "Tak blisko! Spróbujesz jeszcze raz?", {
         fontFamily: "Arial",
         fontSize: "22px",
-        color: "#eafcff",
-      })
+        color: "#eafcff", stroke: "#00151d", strokeThickness: 3 })
       .setOrigin(0.5);
 
     makeButton(this, width / 2, height * 0.72, 420, 140, "JESZCZE RAZ", "#3fd0ff", () => {
