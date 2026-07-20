@@ -1,4 +1,4 @@
-# 🐠 Złota Rybka — podwodna gra match-3
+# 🐠 Złota Rybka 
 
 Przytulna gra logiczna w przeglądarce. Układaj trójki morskich symboli na planszy 7×7, zdobywaj bonusy, przechodź **50 poziomów** kampanii — a za zarobione monety **urządzaj własne akwarium**: kupuj dekoracje i rybki, i rozstawiaj je po swojemu.
 
