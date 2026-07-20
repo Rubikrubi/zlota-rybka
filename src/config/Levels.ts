@@ -1,7 +1,7 @@
 /**
  * Levels.ts
  * ---------------------------------------------------------------------------
- * Static configuration for the 10-level campaign. Each level defines a score
+ * Static configuration for the 50-level campaign. Each level defines a score
  * goal, a limited number of moves, and a coin reward paid out on victory.
  */
 
@@ -16,16 +16,56 @@ export interface LevelConfig {
 // Progi punktowe obnizone o ~22% wzgledem wersji na plansze 8x8: przy 7x7 jest
 // 49 pol zamiast 64, wiec kaskady sa krotsze i punkty zbieraja sie wolniej.
 export const LEVELS: LevelConfig[] = [
-  { id: 1, name: "Płytka Zatoczka", goal: 2400, moves: 20, reward: 50 },
-  { id: 2, name: "Ogród Wodorostów", goal: 4000, moves: 25, reward: 60 },
-  { id: 3, name: "Bąbelkowa Rafa", goal: 5500, moves: 22, reward: 70 },
-  { id: 4, name: "Zatopione Ruiny", goal: 7000, moves: 24, reward: 80 },
-  { id: 5, name: "Perłowa Grota", goal: 9500, moves: 26, reward: 100 },
-  { id: 6, name: "Kryształowy Rów", goal: 11500, moves: 25, reward: 120 },
-  { id: 7, name: "Koralowy Labirynt", goal: 14000, moves: 27, reward: 140 },
-  { id: 8, name: "Rozgwiazdowe Mielizny", goal: 17000, moves: 28, reward: 160 },
-  { id: 9, name: "Morska Otchłań", goal: 20000, moves: 30, reward: 180 },
-  { id: 10, name: "Skarbiec Króla Przypływów", goal: 25000, moves: 30, reward: 250 },
+  { id: 1, name: "Płytka Zatoczka", goal: 4900, moves: 20, reward: 50 },
+  { id: 2, name: "Ogród Wodorostów", goal: 6600, moves: 25, reward: 60 },
+  { id: 3, name: "Bąbelkowa Rafa", goal: 6700, moves: 23, reward: 70 },
+  { id: 4, name: "Zatopione Ruiny", goal: 7100, moves: 24, reward: 80 },
+  { id: 5, name: "Perłowa Grota", goal: 8000, moves: 26, reward: 100 },
+  { id: 6, name: "Kryształowy Rów", goal: 8100, moves: 25, reward: 120 },
+  { id: 7, name: "Koralowy Labirynt", goal: 9000, moves: 27, reward: 140 },
+  { id: 8, name: "Rozgwiazdowe Mielizny", goal: 9600, moves: 28, reward: 160 },
+  { id: 9, name: "Morska Otchłań", goal: 10700, moves: 30, reward: 180 },
+  { id: 10, name: "Skarbiec Króla Przypływów", goal: 11000, moves: 30, reward: 250 },
+  { id: 11, name: "Koralowy Ogród", goal: 11100, moves: 28, reward: 260 },
+  { id: 12, name: "Latarnia Głębin", goal: 11200, moves: 28, reward: 280 },
+  { id: 13, name: "Wrak Karaweli", goal: 11300, moves: 28, reward: 290 },
+  { id: 14, name: "Perłowa Ławica", goal: 12300, moves: 30, reward: 310 },
+  { id: 15, name: "Szmaragdowa Toń", goal: 12400, moves: 29, reward: 320 },
+  { id: 16, name: "Jaskinia Meduz", goal: 12500, moves: 29, reward: 340 },
+  { id: 17, name: "Prąd Zatokowy", goal: 12700, moves: 29, reward: 360 },
+  { id: 18, name: "Srebrna Mielizna", goal: 13000, moves: 29, reward: 370 },
+  { id: 19, name: "Grota Węgorzy", goal: 13800, moves: 30, reward: 390 },
+  { id: 20, name: "Zatoka Rozbitków", goal: 14000, moves: 30, reward: 550 },
+  { id: 21, name: "Podwodny Wulkan", goal: 14800, moves: 31, reward: 420 },
+  { id: 22, name: "Rafa Barierowa", goal: 14900, moves: 30, reward: 440 },
+  { id: 23, name: "Kolonia Koników", goal: 15000, moves: 30, reward: 450 },
+  { id: 24, name: "Zimny Nurt", goal: 15700, moves: 31, reward: 470 },
+  { id: 25, name: "Anemonowa Łąka", goal: 15900, moves: 31, reward: 480 },
+  { id: 26, name: "Skalne Wrota", goal: 16200, moves: 31, reward: 500 },
+  { id: 27, name: "Dolina Skorupiaków", goal: 16500, moves: 31, reward: 520 },
+  { id: 28, name: "Zatopiona Świątynia", goal: 17300, moves: 32, reward: 530 },
+  { id: 29, name: "Bursztynowa Płycizna", goal: 17600, moves: 32, reward: 550 },
+  { id: 30, name: "Trójząb Neptuna", goal: 17900, moves: 32, reward: 710 },
+  { id: 31, name: "Czarna Rozpadlina", goal: 18100, moves: 32, reward: 580 },
+  { id: 32, name: "Ławica Latarników", goal: 18400, moves: 32, reward: 600 },
+  { id: 33, name: "Ogród Rozgwiazd", goal: 19300, moves: 33, reward: 610 },
+  { id: 34, name: "Kryształowa Kopuła", goal: 19500, moves: 33, reward: 630 },
+  { id: 35, name: "Wir Południowy", goal: 20400, moves: 34, reward: 640 },
+  { id: 36, name: "Grzbiet Wieloryba", goal: 20500, moves: 33, reward: 660 },
+  { id: 37, name: "Muszlowa Aleja", goal: 20600, moves: 33, reward: 680 },
+  { id: 38, name: "Zatoka Ośmiornic", goal: 21300, moves: 34, reward: 690 },
+  { id: 39, name: "Fosforyzujący Kanion", goal: 21600, moves: 34, reward: 710 },
+  { id: 40, name: "Korona Przypływów", goal: 21800, moves: 34, reward: 870 },
+  { id: 41, name: "Lodowa Szczelina", goal: 22100, moves: 34, reward: 740 },
+  { id: 42, name: "Ruiny Atlantydy", goal: 23000, moves: 35, reward: 760 },
+  { id: 43, name: "Ławica Rekinów", goal: 23300, moves: 35, reward: 770 },
+  { id: 44, name: "Studnia Bez Dna", goal: 23600, moves: 35, reward: 790 },
+  { id: 45, name: "Ogród Ukwiałów", goal: 23900, moves: 35, reward: 800 },
+  { id: 46, name: "Rów Mariański", goal: 24200, moves: 35, reward: 820 },
+  { id: 47, name: "Świetlisty Labirynt", goal: 24400, moves: 35, reward: 840 },
+  { id: 48, name: "Sanktuarium Syren", goal: 25400, moves: 36, reward: 850 },
+  { id: 49, name: "Otchłań Lewiatana", goal: 26400, moves: 37, reward: 870 },
+  { id: 50, name: "Tron Władcy Mórz", goal: 26500, moves: 36, reward: 1030 },
 ];
 
 export function getLevel(id: number): LevelConfig {

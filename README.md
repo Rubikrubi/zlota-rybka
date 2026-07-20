@@ -1,6 +1,6 @@
 # 🐠 Złota Rybka — podwodna gra match-3
 
-Przytulna podwodna gra logiczna **match-3** w przeglądarce. Układaj trójki morskich symboli na planszy 8×8, zdobywaj bonusy, przechodź **10 poziomów** kampanii — a za zarobione monety **urządzaj własne akwarium**: kupuj dekoracje i rybki, i rozstawiaj je po swojemu.
+Przytulna podwodna gra logiczna **match-3** w przeglądarce. Układaj trójki morskich symboli na planszy 7×7, zdobywaj bonusy, przechodź **50 poziomów** kampanii — a za zarobione monety **urządzaj własne akwarium**: kupuj dekoracje i rybki, i rozstawiaj je po swojemu.
 
 ## ▶️ Zagraj teraz (bez instalacji)
 
@@ -33,7 +33,7 @@ Bonusy **wybuchają łańcuchowo** — jeśli wybuch jednego obejmie drugi, ten 
 
 ## 🎯 Cel gry
 
-- Każdy z **10 poziomów** ma **próg punktowy** i **limit ruchów** — zrób wynik zanim skończą się ruchy.
+- Każdy z **50 poziomów** ma **próg punktowy** i **limit ruchów** — zrób wynik zanim skończą się ruchy.
 - Za wygraną dostajesz **monety 🪙** i **gwiazdki ⭐** (1–3, zależnie od tego jak bardzo przebijesz próg).
 - Monety wydajesz w **akwarium** na dekoracje (roślina, kamień, koralowiec, lampa nurka, skrzynia, zamek) i **rybki** (Modropłetwa, Rybka Koralowa, Neonek, Złota Płetwa).
 - Rybki same pływają, a po kliknięciu reagują 💕. Wszystko rozstawiasz przeciąganiem.
@@ -77,7 +77,7 @@ src/
 │   ├── BootScene.ts         wczytywanie grafik, dźwięków i fontów
 │   ├── MainMenuScene.ts     menu główne
 │   ├── LevelSelectScene.ts  wybór poziomu
-│   ├── GameScene.ts         plansza match-3 8×8 (render + sterowanie)
+│   ├── GameScene.ts         plansza match-3 7×7 (render + sterowanie)
 │   ├── AquariumScene.ts     akwarium: sklep i rozstawianie
 │   ├── VictoryScene.ts / DefeatScene.ts / OptionsScene.ts
 ├── systems/
